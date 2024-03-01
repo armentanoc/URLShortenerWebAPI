@@ -25,23 +25,22 @@ public class ExceptionMiddleware
 
     private Task HandleExceptionAsync(HttpContext context, Exception ex)
     {
-        throw new NotImplementedException();
-        //Console.WriteLine($"Exception: {ex.Message}");
-        //var response = context.Response;
-        //response.ContentType = "application/json";
+        Console.WriteLine($"Exception: {ex.Message}");
+        var response = context.Response;
+        response.ContentType = "application/json";
 
-        //switch (ex)
-        //{
-        //    case InvalidOperationException invalidOperationException:
-        //        response.StatusCode = (int)HttpStatusCode.BadRequest;
-        //        break;
+        switch (ex)
+        {
+            case InvalidOperationException invalidOperationException:
+                response.StatusCode = (int)HttpStatusCode.BadRequest;
+                break;
 
-        //    default:
-        //        response.StatusCode = (int)HttpStatusCode.InternalServerError;
-        //        break;
-        //}
+            default:
+                response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                break;
+        }
 
-        //var result = JsonSerializer.Serialize(new { error = ex.Message });
-        //return response.WriteAsync(result);
+        var result = JsonSerializer.Serialize(new { error = ex.Message });
+        return response.WriteAsync(result);
     }
 }
