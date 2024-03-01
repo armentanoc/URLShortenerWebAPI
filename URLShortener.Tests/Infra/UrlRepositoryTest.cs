@@ -1,34 +1,13 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using Moq;
-using URLShortener.Application.Interfaces;
 using URLShortener.Domain;
 using URLShortener.Infra.Context;
-using URLShortener.Infra.Interfaces;
 using URLShortener.Infra.Repositories;
 
 namespace URLShortener.Tests.Infra
 {
     public class UrlRepositoryTest
     {
-        [Fact]
-        public async Task GetAsync_ShouldRetrieveOriginalUrl()
-        {
-            // Arrange
-            var urlRepositoryMock = new Mock<IUrlRepository>();
-            urlRepositoryMock.Setup(repo => repo.GetByUrlAsync("shortened-url"))
-                            .ReturnsAsync(new Url("https://example.com", "shortened-url", DateTime.Now.AddMinutes(2)));
-
-            var urlService = new UrlService(urlRepositoryMock.Object);
-
-            // Act
-            var result = await urlService.GetOriginalUrlAsync("shortened-url");
-            var originalUrl = result.OriginalUrl;
-
-            // Assert
-            Assert.NotNull(originalUrl);
-            Assert.Equal("https://example.com", originalUrl);
-        }
 
         [Fact]
         public async Task AddAsync_ShouldCreateShortenedUrl()
@@ -53,6 +32,34 @@ namespace URLShortener.Tests.Infra
             // Assert
             Assert.NotNull(result);
             Assert.Equal(shortenedUrlToAdd, result);
+        }
+
+        [Fact]
+        public async Task GetAsync_ShouldRetrieveOriginalUrl()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(databaseName: "InMemoryDatabase_GetAsync")
+                .Options;
+
+            var mockContext = new AppDbContext(options);
+            var repository = new UrlRepository(mockContext);
+
+            var originalUrl = "https://www.example.com";
+            var shortenedUrl = "abc123";
+            var expirationDate = DateTime.Now.AddMinutes(2);
+
+            var urlToAdd = new Url(originalUrl, shortenedUrl, expirationDate);
+            var addedUrl = await repository.AddAsync(urlToAdd);
+
+            // Act
+            var retrievedUrl = await repository.GetAsync(addedUrl.Id);
+
+            // Assert
+            Assert.NotNull(retrievedUrl);
+            Assert.Equal(originalUrl, retrievedUrl.OriginalUrl);
+            Assert.Equal(shortenedUrl, retrievedUrl.ShortenedUrl);
+            Assert.Equal(expirationDate, retrievedUrl.ExpirationDate);
         }
     }
 }
