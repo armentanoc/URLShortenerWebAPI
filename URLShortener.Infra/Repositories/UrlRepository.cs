@@ -1,21 +1,27 @@
 ﻿
 using URLShortener.Domain;
+using URLShortener.Infra.Context;
 using URLShortener.Infra.Interfaces;
 
 namespace URLShortener.Infra.Repositories
 {
-    public class UrlRepository : IUrlRepository
+    public class UrlRepository : Repository<Url>, IUrlRepository
     {
-        public Task AddAsync(Url url)
+        public UrlRepository(AppDbContext context) : base(context)
         {
-            throw new NotImplementedException();
+            //required by EF
         }
-
-        public Task<uint> GetByIdAsync(uint id)
+        public new async Task<Url> AddAsync(Url entityToAdd)
         {
-            throw new NotImplementedException();
-        }
+            if (!await EntityExistsAsync(entityToAdd))
+            {
+                _context.Set<Url>().Add(entityToAdd);
+                await _context.SaveChangesAsync();
+                return entityToAdd;
+            }
 
+            throw new Exception($"Url with properties described already exists ({entityToAdd.ToString()}.");
+        }
         public Task<Url> GetByUrlAsync(string shortenedUrl)
         {
             throw new NotImplementedException();

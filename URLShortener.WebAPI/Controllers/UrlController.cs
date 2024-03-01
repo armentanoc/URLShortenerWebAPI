@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using URLShortener.Application.Interfaces;
 using URLShortener.ViewModels;
+using URLShortener.WebAPI.Middlewares;
 
 namespace URLShortener.WebAPI.Controllers
 {
+    [ServiceFilter(typeof(LoggingMiddleware))]
     [ApiController]
     [Route("[controller]")]
     public class UrlController : ControllerBase

@@ -19,5 +19,10 @@ namespace URLShortener.Domain
             ShortenedUrl = shortenedUrl;
             ExpirationDate = expirationDate;
         }
+
+        public override string ToString()
+        {
+            return "OriginalUrl: " + OriginalUrl + ", ShortenedUrl: " + ShortenedUrl + ", ExpirationDate: " + ExpirationDate;
+        }
     }
 }
