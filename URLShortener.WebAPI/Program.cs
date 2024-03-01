@@ -1,4 +1,7 @@
-
+using URLShortener.Application.Interfaces;
+using URLShortener.Infra.Interfaces;
+using URLShortener.Infra.Repositories;
+using URLShortener.WebAPI.Filters;
 namespace URLShortener.WebAPI
 {
     public class Program
@@ -7,16 +10,25 @@ namespace URLShortener.WebAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            //Repositories
+            builder.Services.AddScoped<IUrlRepository, UrlRepository>();
+            
+            //Services
+            builder.Services.AddScoped<IUrlService, UrlService>();
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            //Controllers
+            builder.Services.AddControllers(
+                options => options.Filters.Add<LoggingFilter>()
+             );
+          
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            //Custom Exception Middleware
+            app.UseMiddleware<ExceptionMiddleware>();
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -26,7 +38,6 @@ namespace URLShortener.WebAPI
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
