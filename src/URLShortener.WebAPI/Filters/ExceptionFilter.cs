@@ -1,5 +1,4 @@
 ﻿
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 using System.Text.Json;
@@ -16,9 +15,9 @@ public class ExceptionFilter : IAsyncExceptionFilter
     public async Task OnExceptionAsync(ExceptionContext context)
     {
         var ex = context.Exception;
-        Console.WriteLine($"Exception: {ex.Message}");
         var response = context.HttpContext.Response;
         response.ContentType = "application/json";
+        _logger.LogError(ex, "Unhandled Exception");
 
         switch (ex)
         {
@@ -31,10 +30,9 @@ public class ExceptionFilter : IAsyncExceptionFilter
                 break;
         }
 
-        var result = JsonSerializer.Serialize(new { error = ex.Message, statusCode = response.StatusCode
-        });
+        var result = JsonSerializer.Serialize(new { error = ex.Message, statusCode = response.StatusCode });
         _logger.LogError(result);
-        //await response.WriteAsync(result);
-        await Task.CompletedTask;
+        await response.WriteAsync(result);
+        context.ExceptionHandled = true;
     }
 }
