@@ -16,8 +16,9 @@ namespace URLShortener.Application.Interfaces
             _repository = repository;
             _configuration = configuration;
         }
-        public async Task<Url> GetOriginalUrlAsync(string shortenedUrl)
+        public async Task<Url> GetOriginalUrlAsync(string slug)
         {
+            string shortenedUrl = $"{GetShortenedUrlDomain()}/{slug}";
             string decodedUrl = System.Net.WebUtility.UrlDecode(shortenedUrl);
             Url retrievedUrl = await _repository.GetByUrlAsync(decodedUrl);
 
@@ -51,14 +52,23 @@ namespace URLShortener.Application.Interfaces
 
         public DateTime GenerateRandomDuration()
         {
-            var random = new Random();
-            var randomMinutes = random.Next(2, 11);
+            var minMinutesConfig = _configuration.GetSection("AppSettings:MinMinutesToExpire").Value;
+            var maxMinutesConfig = _configuration.GetSection("AppSettings:MaxMinutesToExpire").Value;
+            
+            if (!uint.TryParse(minMinutesConfig, out uint minMinutes) || !uint.TryParse(maxMinutesConfig, out uint maxMinutes))
+                throw new Exception("Invalid configuration for expiration minutes. Check appsettings.json file.");
+
+            if (minMinutes >= maxMinutes)
+                throw new Exception("Invalid configuration. MinMinutesToExpire should be less than MaxMinutesToExpire.");
+
+            var randomMinutes = new Random().Next((int)minMinutes, (int)maxMinutes);
             return DateTime.Now.AddMinutes(randomMinutes);
         }
+
         public async Task<string> GenerateUniqueIdentifier()
         {
             var urlRegisters = await _repository.GetAllAsync();
-            Url lastUrl = urlRegisters.LastOrDefault();
+            Url? lastUrl = urlRegisters.LastOrDefault();
             uint id = lastUrl?.Id ?? 0;
             return GenerateSlug(id);
         }

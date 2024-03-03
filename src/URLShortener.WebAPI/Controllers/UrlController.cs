@@ -36,13 +36,23 @@ namespace URLShortener.WebAPI.Controllers
         [Route("{slug}")]
         public async Task<IActionResult> Get([FromRoute] string slug)
         {
-            string shortenedUrl = $"{_urlService.GetShortenedUrlDomain()}/{slug}";
-            Url originalUrl = await _urlService.GetOriginalUrlAsync(shortenedUrl);
+            try
+            {
+                Url originalUrl = await _urlService.GetOriginalUrlAsync(slug);
 
-            if (originalUrl is Url url)
-                return Ok(url.OriginalUrl);
+                if (originalUrl != null)
+                {
+                    _logger.LogInformation($"Redirecting to: {originalUrl.OriginalUrl}");
+                    return Redirect(originalUrl.OriginalUrl);
+                }
 
-            return NotFound();
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error retrieving original URL: {ex.Message}");
+                return StatusCode(500, new { error = ex.Message });
+            }
         }
 
         [HttpPost]

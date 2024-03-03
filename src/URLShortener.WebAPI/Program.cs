@@ -4,6 +4,7 @@ using URLShortener.Application.Interfaces;
 using URLShortener.Infra.Context;
 using URLShortener.Infra.Interfaces;
 using URLShortener.Infra.Repositories;
+using URLShortener.WebAPI.Controllers;
 using URLShortener.WebAPI.Middlewares;
 namespace URLShortener.WebAPI
 {
@@ -23,8 +24,7 @@ namespace URLShortener.WebAPI
                     policyBuilder
                     .WithOrigins("http://localhost:5000")
                     .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    ;
+                    .AllowAnyMethod();
                 });
             });
 
@@ -71,8 +71,6 @@ namespace URLShortener.WebAPI
 
             //Custom Logging Middleware
             app.UseMiddleware<LoggingMiddleware>();
-
-            app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
