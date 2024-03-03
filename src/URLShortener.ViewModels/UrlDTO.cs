@@ -13,10 +13,5 @@ namespace URLShortener.ViewModels
             OriginalUrl = originalUrl;
             ExpirationDate = expirationDate;
         }
-
-        public UrlDTO()
-        {
-            // Required by EF
-        }
     }
 }
