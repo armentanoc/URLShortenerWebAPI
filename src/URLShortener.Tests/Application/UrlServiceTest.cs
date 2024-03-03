@@ -64,7 +64,7 @@ namespace URLShortener.Tests.Application
                          .ReturnsAsync(new Url("https://example.com", "https://localhost:1234/expired", DateTime.Now.AddDays(-1), "expired"));
 
             // Act & Assert
-            await Assert.ThrowsAsync<Exception>(async () => await urlService.GetOriginalUrlAsync("expired"));
+            await Assert.ThrowsAsync<ExpiredUrlException>(async () => await urlService.GetOriginalUrlAsync("expired"));
         }
 
         [Fact]
@@ -134,8 +134,7 @@ namespace URLShortener.Tests.Application
 
             urlService.Invoking(service => service.GenerateRandomDuration())
                  .Should()
-                 .Throw<Exception>()
-                 .WithMessage("Invalid configuration for expiration minutes. Check appsettings.json file.");
+                 .Throw<FailedToParseMinutesToUintException>();
         }
 
         [Fact]
@@ -202,8 +201,7 @@ namespace URLShortener.Tests.Application
             // Act & Assert
             urlService.Invoking(service => service.UrlIsExpired(url))
                 .Should()
-                .Throw<Exception>()
-                .WithMessage("This URL has expired.");
+                .Throw<ExpiredUrlException>();
         }
     }
 }

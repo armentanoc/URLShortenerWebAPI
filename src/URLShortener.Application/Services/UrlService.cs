@@ -25,7 +25,7 @@ namespace URLShortener.Application.Interfaces
             if(!UrlIsExpired(retrievedUrl))
                 return retrievedUrl;
 
-            throw new Exception("This URL has expired.");   
+            throw new ExpiredUrlException();   
         }
 
         public async Task<Url> ShortenUrlAsync(string originalUrl)
@@ -56,10 +56,10 @@ namespace URLShortener.Application.Interfaces
             var maxMinutesConfig = _configuration.GetSection("AppSettings:MaxMinutesToExpire").Value;
             
             if (!uint.TryParse(minMinutesConfig, out uint minMinutes) || !uint.TryParse(maxMinutesConfig, out uint maxMinutes))
-                throw new Exception("Invalid configuration for expiration minutes. Check appsettings.json file.");
+                throw new FailedToParseMinutesToUintException();
 
             if (minMinutes >= maxMinutes)
-                throw new Exception("Invalid configuration. MinMinutesToExpire should be less than MaxMinutesToExpire.");
+                throw new MinMinutesIsGreaterOrEqualThanMaxMinutesException();
 
             var randomMinutes = new Random().Next((int)minMinutes, (int)maxMinutes);
             return DateTime.Now.AddMinutes(randomMinutes);
@@ -80,7 +80,7 @@ namespace URLShortener.Application.Interfaces
         {
             if (retrievedUrl.ExpirationDate > DateTime.Now || retrievedUrl is null)
                 return false;
-            throw new Exception("This URL has expired.");
+            throw new ExpiredUrlException();
         }
 
         public async Task<IEnumerable<Url>> GetAllAsync()

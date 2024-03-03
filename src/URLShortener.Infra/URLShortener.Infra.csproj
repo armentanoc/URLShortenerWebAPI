@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\URLShortener.CustomExceptions\URLShortener.CustomExceptions.csproj" />
     <ProjectReference Include="..\URLShortener.Domain\URLShortener.Domain.csproj" />
   </ItemGroup>
 

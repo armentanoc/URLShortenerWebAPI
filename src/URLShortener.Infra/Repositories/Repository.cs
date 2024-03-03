@@ -25,7 +25,7 @@ namespace URLShortener.Infra.Repositories
                 return entityToAdd;
             }
 
-            throw new Exception($"Entity {_specificEntity} with properties described already exists.");
+            throw new EntityAlreadyExistsException(_specificEntity);
         }
 
         public async Task<bool> DeleteAsync(uint id)
@@ -47,7 +47,7 @@ namespace URLShortener.Infra.Repositories
                 return entityToReturn;
             }
 
-            throw new Exception($"Entity {_specificEntity} with id {id} doesn't exist.");
+            throw new EntityNotFoundException(_specificEntity, id);
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()

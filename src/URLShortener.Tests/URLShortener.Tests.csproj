@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\URLShortener.Application\URLShortener.Application.csproj" />
+    <ProjectReference Include="..\URLShortener.CustomExceptions\URLShortener.CustomExceptions.csproj" />
     <ProjectReference Include="..\URLShortener.Domain\URLShortener.Domain.csproj" />
     <ProjectReference Include="..\URLShortener.Infra\URLShortener.Infra.csproj" />
     <ProjectReference Include="..\URLShortener.ViewModels\URLShortener.ViewModels.csproj" />

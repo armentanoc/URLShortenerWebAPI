@@ -21,7 +21,7 @@ namespace URLShortener.Infra.Repositories
                 return entityToAdd;
             }
 
-            throw new Exception($"Url with properties described already exists ({entityToAdd.ToString()}.");
+            throw new EntityAlreadyExistsException(entityToAdd.ToString());
         }
         public async Task<Url> GetByUrlAsync(string shortenedUrl)
         {
@@ -30,7 +30,7 @@ namespace URLShortener.Infra.Repositories
             if (entityToReturn is Url url)
                 return entityToReturn;
 
-            throw new Exception($"Original url with shortened url {shortenedUrl} doesn't exist.");
+            throw new EntityNotFoundException(shortenedUrl);
         }
     }
 }

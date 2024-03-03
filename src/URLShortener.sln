@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.WebAPI", "URLShortener.WebAPI\URLShortener.WebAPI.csproj", "{64A64BB8-A9DE-4860-86B9-E70B9C9E597A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "URLShortener.WebAPI", "URLShortener.WebAPI\URLShortener.WebAPI.csproj", "{64A64BB8-A9DE-4860-86B9-E70B9C9E597A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.Domain", "URLShortener.Domain\URLShortener.Domain.csproj", "{FB85AFC0-D5D7-4E46-BF15-E4A7DA3B5647}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "URLShortener.Domain", "URLShortener.Domain\URLShortener.Domain.csproj", "{FB85AFC0-D5D7-4E46-BF15-E4A7DA3B5647}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.Infra", "URLShortener.Infra\URLShortener.Infra.csproj", "{397FB849-2D46-41B1-92EC-E128B0BC9CF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "URLShortener.Infra", "URLShortener.Infra\URLShortener.Infra.csproj", "{397FB849-2D46-41B1-92EC-E128B0BC9CF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.Application", "URLShortener.Application\URLShortener.Application.csproj", "{F20A70EB-0082-41CF-B206-405846498789}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "URLShortener.Application", "URLShortener.Application\URLShortener.Application.csproj", "{F20A70EB-0082-41CF-B206-405846498789}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.ViewModels", "URLShortener.ViewModels\URLShortener.ViewModels.csproj", "{C1EC1A6E-9880-40D9-874A-D45A005B9C34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "URLShortener.ViewModels", "URLShortener.ViewModels\URLShortener.ViewModels.csproj", "{C1EC1A6E-9880-40D9-874A-D45A005B9C34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.Tests", "URLShortener.Tests\URLShortener.Tests.csproj", "{DF1BDEC5-61FF-4CCA-AE9D-B2A9C5449075}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "URLShortener.Tests", "URLShortener.Tests\URLShortener.Tests.csproj", "{DF1BDEC5-61FF-4CCA-AE9D-B2A9C5449075}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.CustomExceptions", "URLShortener.CustomExceptions\URLShortener.CustomExceptions.csproj", "{33E7330E-CC49-4DE6-A462-A985441FA848}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{DF1BDEC5-61FF-4CCA-AE9D-B2A9C5449075}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF1BDEC5-61FF-4CCA-AE9D-B2A9C5449075}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF1BDEC5-61FF-4CCA-AE9D-B2A9C5449075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33E7330E-CC49-4DE6-A462-A985441FA848}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33E7330E-CC49-4DE6-A462-A985441FA848}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33E7330E-CC49-4DE6-A462-A985441FA848}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33E7330E-CC49-4DE6-A462-A985441FA848}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

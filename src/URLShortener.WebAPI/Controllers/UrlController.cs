@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using URLShortener.Application.Interfaces;
 using URLShortener.Domain;
 using URLShortener.ViewModels;
@@ -22,6 +23,7 @@ namespace URLShortener.WebAPI.Controllers
 
         [HttpGet]
         [Route("all")]
+        [SwaggerOperation("Get all URLs in database.")]
         public async Task<IActionResult> GetAll()
         {
             var urls = await _urlService.GetAllAsync();
@@ -34,6 +36,7 @@ namespace URLShortener.WebAPI.Controllers
 
         [HttpGet]
         [Route("{slug}")]
+        [SwaggerOperation("Redirects to original URL by existing shortened URL.")]
         public async Task<IActionResult> Get([FromRoute] string slug)
         {
             try
@@ -57,6 +60,7 @@ namespace URLShortener.WebAPI.Controllers
 
         [HttpPost]
         [Route("makeUrlShort")]
+        [SwaggerOperation("Shortens a new URL and returns the object saved on database.")]
         public async Task<IActionResult> Add([FromBody] UrlRequest url)
         {
             if (url == null || string.IsNullOrEmpty(url.OriginalUrl))
