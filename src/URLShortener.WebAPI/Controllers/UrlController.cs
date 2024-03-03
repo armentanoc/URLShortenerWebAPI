@@ -1,37 +1,41 @@
 using Microsoft.AspNetCore.Mvc;
 using URLShortener.Application.Interfaces;
+using URLShortener.Domain;
 using URLShortener.ViewModels;
 using URLShortener.WebAPI.Middlewares;
 
 namespace URLShortener.WebAPI.Controllers
 {
-    [ServiceFilter(typeof(LoggingMiddleware))]
     [ApiController]
     [Route("[controller]")]
     public class UrlController : ControllerBase
     {
         private readonly ILogger<UrlController> _logger;
         private readonly IUrlService _urlService;
+        private readonly IConfiguration _configuration;
 
-        public UrlController(ILogger<UrlController> logger, IUrlService urlService)
+        public UrlController(ILogger<UrlController> logger, IUrlService urlService, IConfiguration configuration)
         {
             _logger = logger;
             _urlService = urlService;
+            _configuration = configuration;
         }
 
+        [HttpGet]
+        [Route("{shortenedUrl}")]
         public async Task<IActionResult> Get(string shortenedUrl)
         {
-            var originalUrl = await _urlService.GetOriginalUrlAsync(shortenedUrl);
+            Url originalUrl = await _urlService.GetOriginalUrlAsync(shortenedUrl);
 
-            if (originalUrl != null)
-                return Ok(new { OriginalUrl = originalUrl });
+            if (originalUrl is Url url)
+                return Ok(url);
 
             return NotFound();
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] UrlDTO url)
+        public async Task<IActionResult> Add([FromBody] UrlRequest url)
         {
             if (url == null || string.IsNullOrEmpty(url.OriginalUrl))
                 return BadRequest("Invalid input data");
@@ -41,7 +45,7 @@ namespace URLShortener.WebAPI.Controllers
             if (string.IsNullOrEmpty(shortenedUrl.ShortenedUrl))
                 return BadRequest("Failed to create shortened URL");
 
-            return CreatedAtAction(nameof(Get), new { shortenedUrl }, url);
+            return CreatedAtAction(nameof(Get), new { shortenedUrl }, shortenedUrl);
         }
     }
 }
