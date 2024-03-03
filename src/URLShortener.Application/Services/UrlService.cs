@@ -1,60 +1,75 @@
 ﻿
 using URLShortener.Domain;
 using URLShortener.Infra.Interfaces;
-using URLShortener.ViewModels;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 
 namespace URLShortener.Application.Interfaces
 {
     public class UrlService : IUrlService
     {
         private readonly IUrlRepository _repository;
+        private readonly IConfiguration _configuration;
 
-        public UrlService(IUrlRepository repository)
+        public UrlService(IUrlRepository repository, IConfiguration configuration)
         {
             _repository = repository;
+            _configuration = configuration;
         }
-        public async Task<UrlDTO> GetOriginalUrlAsync(string shortenedUrl)
+        public async Task<Url> GetOriginalUrlAsync(string shortenedUrl)
         {
-            var retrievedUrl = await _repository.GetByUrlAsync(shortenedUrl);
+            string decodedUrl = System.Net.WebUtility.UrlDecode(shortenedUrl);
+            Url retrievedUrl = await _repository.GetByUrlAsync(decodedUrl);
 
-            if (retrievedUrl is Url url)
-                new UrlDTO(retrievedUrl.OriginalUrl, retrievedUrl.ShortenedUrl, retrievedUrl.ExpirationDate);
+            if(!UrlIsExpired(retrievedUrl))
+                return retrievedUrl;
 
-            throw new Exception(shortenedUrl + " not found.");
+            throw new Exception("This URL has expired.");   
         }
 
         public async Task<Url> ShortenUrlAsync(string originalUrl)
         {
-            var shortenedUrl = await GenerateShortenedUrl();
-            var expirationDate = GenerateRandomDuration();
-            var newUrl = new Url(originalUrl, shortenedUrl, expirationDate);
-            var addedUrl = await _repository.AddAsync(newUrl);
-            return addedUrl;
+            string shortenedUrl = await GenerateShortenedUrl();
+            DateTime expirationDate = GenerateRandomDuration();
+            Url newUrl = new Url(originalUrl, shortenedUrl, expirationDate);
+            await _repository.AddAsync(newUrl);
+            return newUrl;
         }
 
-        private async Task<string> GenerateShortenedUrl()
+        public async Task<string> GenerateShortenedUrl()
         {
             string uniqueIdentifier = await GenerateUniqueIdentifier();
-            string localhostAddress = "http://localhost:5000";
-            string shortenedUrl = $"{localhostAddress}/{uniqueIdentifier}";
-            return shortenedUrl;
+            string localhostAddress = GetShortenedUrlDomain();
+            return $"{localhostAddress}/{uniqueIdentifier}";
         }
 
-        private DateTime GenerateRandomDuration()
+        public string GetShortenedUrlDomain()
+        {
+            return _configuration.GetSection("AppSettings:ShortenedUrlDomain").Value ?? throw new Exception("Host not configured.");
+        }
+
+        public DateTime GenerateRandomDuration()
         {
             var random = new Random();
-            var randomSeconds = random.Next(2, 11);
-            return DateTime.Now.AddSeconds(randomSeconds);
+            var randomMinutes = random.Next(2, 11);
+            return DateTime.Now.AddMinutes(randomMinutes);
         }
-        private async Task<string> GenerateUniqueIdentifier()
+        public async Task<string> GenerateUniqueIdentifier()
         {
             var urlRegisters = await _repository.GetAllAsync();
-            var lastUrl = urlRegisters.LastOrDefault();
-            return lastUrl != null ? ConvertTo7LetterHash(lastUrl.Id) : "aaaaaaa"; 
+            Url lastUrl = urlRegisters.LastOrDefault();
+            uint id = lastUrl?.Id ?? 0;
+            return GenerateSlug(id);
         }
-        private string ConvertTo7LetterHash(uint id)
+        public string GenerateSlug(uint id)
         {
-            return id.ToString("X").Substring(0, 7); 
+            return WebEncoders.Base64UrlEncode(BitConverter.GetBytes(id)); 
+        }
+        public bool UrlIsExpired(Url retrievedUrl)
+        {
+            if (retrievedUrl.ExpirationDate > DateTime.Now || retrievedUrl is null)
+                return false;
+            throw new Exception("This URL has expired.");
         }
     }
 }

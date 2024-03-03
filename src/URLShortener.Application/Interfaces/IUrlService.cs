@@ -1,11 +1,12 @@
-﻿using URLShortener.Domain;
+﻿using Microsoft.Extensions.Configuration;
+using URLShortener.Domain;
 using URLShortener.ViewModels;
 
 namespace URLShortener.Application.Interfaces
 {
     public interface IUrlService
     {
-        Task<UrlDTO> GetOriginalUrlAsync(string shortenedUrl);
+        Task<Url> GetOriginalUrlAsync(string shortenedUrl);
         Task<Url> ShortenUrlAsync(string originalUrl);
     }
 }
