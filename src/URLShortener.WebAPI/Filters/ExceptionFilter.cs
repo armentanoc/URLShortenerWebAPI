@@ -1,7 +1,8 @@
 ﻿
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Net;
-using System.Text.Json;
+using URLShortener.Application.Interfaces;
+using URLShortener.Infra.Repositories;
 
 public class ExceptionFilter : IAsyncExceptionFilter
 {
@@ -14,25 +15,54 @@ public class ExceptionFilter : IAsyncExceptionFilter
 
     public async Task OnExceptionAsync(ExceptionContext context)
     {
+        context.ExceptionHandled = false;
         var ex = context.Exception;
+        int statusCode;
+
         var response = context.HttpContext.Response;
         response.ContentType = "application/json";
-        _logger.LogError(ex, "Unhandled Exception");
 
         switch (ex)
         {
-            case InvalidOperationException invalidOperationException:
-                response.StatusCode = (int)HttpStatusCode.BadRequest;
+            case EntityAlreadyExistsException _:
+                statusCode = StatusCodes.Status409Conflict;
+                break;
+
+            case EntityNotFoundException _:
+                statusCode = StatusCodes.Status404NotFound;
+                break;
+
+            case ExpiredUrlException _:
+                statusCode = StatusCodes.Status410Gone;
+                break;
+
+            case FailedToParseMinutesToUintException _:
+            case MinMinutesIsGreaterOrEqualThanMaxMinutesException _:
+            case InvalidOperationException _:
+                statusCode = StatusCodes.Status400BadRequest;
                 break;
 
             default:
-                response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                statusCode = StatusCodes.Status500InternalServerError;
                 break;
         }
 
-        var result = JsonSerializer.Serialize(new { error = ex.Message, statusCode = response.StatusCode });
-        _logger.LogError(result);
-        await response.WriteAsync(result);
-        context.ExceptionHandled = true;
+        var objectResponse = new
+        {
+            Error = new
+            {
+                message = context.Exception.Message,
+                statusCode = statusCode
+            }
+        };
+
+        context.Result = new ObjectResult(objectResponse)
+        {
+            StatusCode = statusCode
+        };
+
+        _logger.LogError(objectResponse.ToString());
+        
+        await Task.CompletedTask;
     }
 }

@@ -9,29 +9,16 @@ namespace URLShortener.Infra.Repositories
         public string SpecificEntity { get; private set; }
         public uint Id { get; private set; }
 
-        public EntityNotFoundException()
-        {
-        }
-
-        public EntityNotFoundException(string? message) : base(message)
-        {
-        }
-
         public EntityNotFoundException(string specificEntity, uint id)
             : base($"Entity {specificEntity} with id {id} doesn't exist.")
         {
             SpecificEntity = specificEntity;
             Id = id;
         }
-
-        public EntityNotFoundException(string? message, Exception? innerException)
-            : base(message, innerException)
+        public EntityNotFoundException(string specificEntity)
+            : base($"Entity with property {specificEntity} doesn't exist.")
         {
-        }
-
-        protected EntityNotFoundException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
+            SpecificEntity = specificEntity;
         }
     }
 }

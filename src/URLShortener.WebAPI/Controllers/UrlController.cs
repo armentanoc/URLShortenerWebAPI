@@ -39,23 +39,15 @@ namespace URLShortener.WebAPI.Controllers
         [SwaggerOperation("Redirects to original URL by existing shortened URL.")]
         public async Task<IActionResult> Get([FromRoute] string slug)
         {
-            try
-            {
-                Url originalUrl = await _urlService.GetOriginalUrlAsync(slug);
+            Url originalUrl = await _urlService.GetOriginalUrlAsync(slug);
 
-                if (originalUrl != null)
-                {
-                    _logger.LogInformation($"Redirecting to: {originalUrl.OriginalUrl}");
-                    return Redirect(originalUrl.OriginalUrl);
-                }
-
-                return NotFound();
-            }
-            catch (Exception ex)
+            if (originalUrl != null)
             {
-                _logger.LogError($"Error retrieving original URL: {ex.Message}");
-                return StatusCode(500, new { error = ex.Message });
+                _logger.LogInformation($"Redirecting to: {originalUrl.OriginalUrl}");
+                return Redirect(originalUrl.OriginalUrl);
             }
+
+            return NotFound();
         }
 
         [HttpPost]

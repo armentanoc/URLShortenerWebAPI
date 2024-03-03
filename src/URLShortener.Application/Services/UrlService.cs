@@ -25,7 +25,7 @@ namespace URLShortener.Application.Interfaces
             if(!UrlIsExpired(retrievedUrl))
                 return retrievedUrl;
 
-            throw new ExpiredUrlException();   
+            throw new ExpiredUrlException(decodedUrl);   
         }
 
         public async Task<Url> ShortenUrlAsync(string originalUrl)
@@ -80,7 +80,7 @@ namespace URLShortener.Application.Interfaces
         {
             if (retrievedUrl.ExpirationDate > DateTime.Now || retrievedUrl is null)
                 return false;
-            throw new ExpiredUrlException();
+            throw new ExpiredUrlException(retrievedUrl.ShortenedUrl);
         }
 
         public async Task<IEnumerable<Url>> GetAllAsync()
