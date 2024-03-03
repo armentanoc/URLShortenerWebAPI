@@ -6,7 +6,6 @@ namespace URLShortener.Domain
         public string OriginalUrl { get; private set; }
         public string ShortenedUrl { get; private set; }
         public DateTime ExpirationDate { get; private set; }
-        public object Assert { get; set; }
 
         public Url()
         {
@@ -17,6 +16,12 @@ namespace URLShortener.Domain
         {
             OriginalUrl = originalUrl;
             ShortenedUrl = shortenedUrl;
+            ExpirationDate = expirationDate;
+        }
+
+        public Url(DateTime expirationDate)
+        {
+            // Required by test
             ExpirationDate = expirationDate;
         }
 
