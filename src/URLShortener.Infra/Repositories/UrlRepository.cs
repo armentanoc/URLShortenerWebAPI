@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using URLShortener.Domain;
 using URLShortener.Infra.Context;
 using URLShortener.Infra.Interfaces;
@@ -15,16 +16,21 @@ namespace URLShortener.Infra.Repositories
         {
             if (!await EntityExistsAsync(entityToAdd))
             {
-                _context.Set<Url>().Add(entityToAdd);
+                _context.Url.Add(entityToAdd);
                 await _context.SaveChangesAsync();
                 return entityToAdd;
             }
 
             throw new Exception($"Url with properties described already exists ({entityToAdd.ToString()}.");
         }
-        public Task<Url> GetByUrlAsync(string shortenedUrl)
+        public async Task<Url> GetByUrlAsync(string shortenedUrl)
         {
-            throw new NotImplementedException();
+            var entityToReturn = await _context.Url.FirstOrDefaultAsync(url => url.ShortenedUrl.Equals(shortenedUrl));
+
+            if (entityToReturn is Url url)
+                return entityToReturn;
+
+            throw new Exception($"Original url with shortened url {shortenedUrl} doesn't exist.");
         }
     }
 }
