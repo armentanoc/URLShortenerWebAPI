@@ -3,18 +3,37 @@
 Gere um redirecionamento de URL breve e temporário para compartilhamento eficiente de links. Esse processo envolve criar um link conciso que redireciona para uma URL específica, mas permanece válido por um período limitado. Ao acessar a URL curta dentro desse intervalo de tempo, os usuários são direcionados para a URL original, oferecendo uma solução rápida e temporária para compartilhar conteúdo.
 
 <div align="center" display="flex">
-<img src="" height="500px">
+<img src="https://github.com/armentanoc/URLShortenerWebAPI/assets/88147887/e7bc600b-01b6-4e5e-9237-68177cd4e2a4" height="500px">
 </div>
 
 ## Endpoints da API 🚀
 A API oferece os seguintes endpoints:
 
 ### Url 🔗
+
 ```
 GET /all: Obtém todas as URLs.
+```
+
+<div align="center" display="flex">
+<img src="https://github.com/armentanoc/URLShortenerWebAPI/assets/88147887/1df2eb48-373c-4929-97eb-41f832a18e6b" height="500px">
+</div>
+
+```
 GET /{slug}: Efetua o redirect para uma página válida através da URL encurtada.
+```
+
+<div align="center" display="flex">
+<img src="https://github.com/armentanoc/URLShortenerWebAPI/assets/88147887/012eae15-12f2-4d0b-b095-8bfb7aa457f7" height="500px">
+</div>
+
+```
 POST /makeUrlShort: Encurta a URL e retorna o objeto armazenado no Database.
 ```
+
+<div align="center" display="flex">
+<img src="https://github.com/armentanoc/URLShortenerWebAPI/assets/88147887/c4383253-700d-402d-8b86-c6f160f0f6e1" height="500px">
+</div>
 
 ## Estrutura do Projeto :building_construction:
 
@@ -79,11 +98,12 @@ Por exemplo, no Live Server, os settings.json podem ignorar totalmente a pasta d
 }
 ```
 ## Middleware Customizado de Logging 🗞️ e Filtro Customizado de Exceção 🐛
-<!--<div align="center" display="flex">
-<img src="" height="500px">
-</div>
--->
+
 Através do `Middlewares/LoggingMiddleware` é realizado o logging sempre no começo e no final de uma requisição, com detalhes sobre o status e eventuais erros de forma personalizada, que são capturados no Filtro Customizado de Exceção Global (`Filters/ExceptionFilter.cs`).
+
+<div align="center" display="flex">
+<img src="https://github.com/armentanoc/URLShortenerWebAPI/assets/88147887/91fd958c-f6a5-4c72-ad13-1369ab7b1194" height="500px">
+</div>
 
 ## Configuração do Banco de Dados 🛢️
 
