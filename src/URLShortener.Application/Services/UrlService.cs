@@ -27,7 +27,6 @@ namespace URLShortener.Application.Interfaces
 
             throw new ExpiredUrlException(decodedUrl);   
         }
-
         public async Task<Url> ShortenUrlAsync(string originalUrl)
         {
             string shortenedUrl = await GenerateShortenedUrl();
@@ -37,19 +36,16 @@ namespace URLShortener.Application.Interfaces
             await _repository.AddAsync(newUrl);
             return newUrl;
         }
-
         public async Task<string> GenerateShortenedUrl()
         {
             string uniqueIdentifier = await GenerateUniqueIdentifier();
             string localhostAddress = GetShortenedUrlDomain();
             return $"{localhostAddress}/{uniqueIdentifier}";
         }
-
         public string GetShortenedUrlDomain()
         {
             return _configuration.GetSection("AppSettings:ShortenedUrlDomain").Value ?? throw new Exception("Host not configured.");
         }
-
         public DateTime GenerateRandomDuration()
         {
             var minMinutesConfig = _configuration.GetSection("AppSettings:MinMinutesToExpire").Value;
@@ -64,7 +60,6 @@ namespace URLShortener.Application.Interfaces
             var randomMinutes = new Random().Next((int)minMinutes, (int)maxMinutes);
             return DateTime.Now.AddMinutes(randomMinutes);
         }
-
         public async Task<string> GenerateUniqueIdentifier()
         {
             var urlRegisters = await _repository.GetAllAsync();
@@ -82,7 +77,6 @@ namespace URLShortener.Application.Interfaces
                 return false;
             throw new ExpiredUrlException(retrievedUrl.ShortenedUrl);
         }
-
         public async Task<IEnumerable<Url>> GetAllAsync()
         {
             return await _repository.GetAllAsync();
