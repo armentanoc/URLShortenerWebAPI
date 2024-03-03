@@ -37,11 +37,11 @@ namespace URLShortener.Tests.Application
             var urlService = new UrlService(urlRepositoryMock.Object, configurationMock.Object);
 
             // Mock the behavior of GetByUrlAsync
-            urlRepositoryMock.Setup(repo => repo.GetByUrlAsync("short"))
-                             .ReturnsAsync(new Url("https://exemplo.com", "short", DateTime.Now.AddDays(1)));
+            urlRepositoryMock.Setup(repo => repo.GetByUrlAsync("url/short"))
+                             .ReturnsAsync(new Url("https://exemplo.com", "url/short", DateTime.Now.AddDays(1), "short"));
 
             // Act
-            var response = await urlService.GetOriginalUrlAsync("short");
+            var response = await urlService.GetOriginalUrlAsync("url/short");
             var originalUrl = response.OriginalUrl;
 
             // Assert

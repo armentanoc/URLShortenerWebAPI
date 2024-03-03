@@ -19,6 +19,7 @@ namespace URLShortener.Infra.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     OriginalUrl = table.Column<string>(type: "TEXT", nullable: false),
                     ShortenedUrl = table.Column<string>(type: "TEXT", nullable: false),
+                    Slug = table.Column<string>(type: "TEXT", nullable: false),
                     ExpirationDate = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

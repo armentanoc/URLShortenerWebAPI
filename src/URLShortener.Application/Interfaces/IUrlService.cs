@@ -8,5 +8,7 @@ namespace URLShortener.Application.Interfaces
     {
         Task<Url> GetOriginalUrlAsync(string shortenedUrl);
         Task<Url> ShortenUrlAsync(string originalUrl);
+        string GetShortenedUrlDomain();
+        Task<IEnumerable<Url>> GetAllAsync();
     }
 }

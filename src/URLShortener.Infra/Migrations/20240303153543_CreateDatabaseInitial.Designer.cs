@@ -11,7 +11,7 @@ using URLShortener.Infra.Context;
 namespace URLShortener.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240303150319_CreateDatabaseInitial")]
+    [Migration("20240303153543_CreateDatabaseInitial")]
     partial class CreateDatabaseInitial
     {
         /// <inheritdoc />
@@ -34,6 +34,10 @@ namespace URLShortener.Infra.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ShortenedUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Slug")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

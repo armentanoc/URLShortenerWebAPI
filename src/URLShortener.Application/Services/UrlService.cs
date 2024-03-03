@@ -30,8 +30,9 @@ namespace URLShortener.Application.Interfaces
         public async Task<Url> ShortenUrlAsync(string originalUrl)
         {
             string shortenedUrl = await GenerateShortenedUrl();
+            string slug = shortenedUrl.Split("/").Last();
             DateTime expirationDate = GenerateRandomDuration();
-            Url newUrl = new Url(originalUrl, shortenedUrl, expirationDate);
+            Url newUrl = new Url(originalUrl, shortenedUrl, expirationDate, slug);
             await _repository.AddAsync(newUrl);
             return newUrl;
         }
@@ -70,6 +71,11 @@ namespace URLShortener.Application.Interfaces
             if (retrievedUrl.ExpirationDate > DateTime.Now || retrievedUrl is null)
                 return false;
             throw new Exception("This URL has expired.");
+        }
+
+        public async Task<IEnumerable<Url>> GetAllAsync()
+        {
+            return await _repository.GetAllAsync();
         }
     }
 }

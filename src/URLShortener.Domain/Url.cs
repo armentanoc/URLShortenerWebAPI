@@ -5,6 +5,7 @@ namespace URLShortener.Domain
     {
         public string OriginalUrl { get; private set; }
         public string ShortenedUrl { get; private set; }
+        public string Slug { get; private set; }
         public DateTime ExpirationDate { get; private set; }
 
         public Url()
@@ -12,11 +13,12 @@ namespace URLShortener.Domain
             // Required by EF
         }
 
-        public Url(string originalUrl, string shortenedUrl, DateTime expirationDate)
+        public Url(string originalUrl, string shortenedUrl, DateTime expirationDate, string slug)
         {
             OriginalUrl = originalUrl;
             ShortenedUrl = shortenedUrl;
             ExpirationDate = expirationDate;
+            Slug = slug;
         }
 
         public Url(DateTime expirationDate)
