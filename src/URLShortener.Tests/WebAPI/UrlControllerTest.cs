@@ -41,7 +41,7 @@ namespace URLShortener.Tests.WebAPI
             var iLoggerMock = new Mock<ILogger<UrlController>>();
             var urlServiceMock = new Mock<IUrlService>();
             var controller = new UrlController(iLoggerMock.Object, urlServiceMock.Object);
-            var urlDto = new UrlDTO { OriginalUrl = "https://example.com", ValidSeconds = 3600 };
+            var urlDto = new UrlDTO { OriginalUrl = "https://example.com", ExpirationDate = DateTime.Now.AddMinutes(2) };
 
             // Act
             var result = await controller.Add(urlDto);

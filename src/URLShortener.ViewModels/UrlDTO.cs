@@ -5,13 +5,13 @@ namespace URLShortener.ViewModels
     {
         public string ShortenedUrl { get; set; }
         public string OriginalUrl { get; set; }
-        public int ValidSeconds { get; set; }
+        public DateTime ExpirationDate { get; set; }
 
-        public UrlDTO(string shortenedUrl, string originalUrl, int validSeconds)
+        public UrlDTO(string shortenedUrl, string originalUrl, DateTime expirationDate)
         {
             ShortenedUrl = shortenedUrl;
             OriginalUrl = originalUrl;
-            ValidSeconds = validSeconds;
+            ExpirationDate = expirationDate;
         }
 
         public UrlDTO()

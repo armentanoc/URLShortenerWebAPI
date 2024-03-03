@@ -1,6 +1,7 @@
 
 using Moq;
 using URLShortener.Application.Interfaces;
+using URLShortener.Domain;
 using URLShortener.Infra.Interfaces;
 
 namespace URLShortener.Tests.Application
@@ -13,6 +14,10 @@ namespace URLShortener.Tests.Application
             // Arrange
             var urlRepositoryMock = new Mock<IUrlRepository>();
             var urlService = new UrlService(urlRepositoryMock.Object);
+
+            // Mock the behavior of GetByUrlAsync
+            urlRepositoryMock.Setup(repo => repo.GetByUrlAsync("short"))
+                             .ReturnsAsync(new Url("https://exemplo.com", "short", DateTime.Now.AddDays(1)));
 
             // Act
             var response = await urlService.GetOriginalUrlAsync("short");
