@@ -27,7 +27,7 @@ namespace URLShortener.Tests.WebAPI
                     It.IsAny<EventId>(),
                     It.IsAny<It.IsAnyType>(),
                     It.IsAny<Exception>(),
-                    It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                     Times.Exactly(EXPECTED_TIMES_TO_LOG)); 
         }
     }
