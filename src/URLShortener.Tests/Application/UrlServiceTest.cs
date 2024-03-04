@@ -32,10 +32,10 @@ namespace URLShortener.Tests.Application
             // Arrange
             var urlRepository = SetupUrlRepository();
             var configuration = SetupConfiguration("https://localhost:1234");
-            var urlService = new UrlService(urlRepository.Object, configuration.Object);
+            var sut = new UrlService(urlRepository.Object, configuration.Object);
 
             // Act
-            var shortenedUrl = await urlService.GenerateShortenedUrl();
+            var shortenedUrl = await sut.GenerateShortenedUrl();
 
             // Assert
             shortenedUrl.Should().NotBeNullOrEmpty();
@@ -48,13 +48,13 @@ namespace URLShortener.Tests.Application
             // Arrange
             var urlRepository = SetupUrlRepository();
             var configuration = SetupConfiguration("https://localhost:1234");
-            var urlService = new UrlService(urlRepository.Object, configuration.Object);
+            var sut = new UrlService(urlRepository.Object, configuration.Object);
 
             urlRepository.Setup(repo => repo.GetByUrlAsync("https://localhost:1234/short"))
                          .ReturnsAsync(new Url("https://example.com", "https://localhost:1234/short", DateTime.UtcNow.AddDays(1), "short"));
 
             // Act
-            var response = await urlService.GetOriginalUrlAsync("short");
+            var response = await sut.GetOriginalUrlAsync("short");
             var originalUrl = response.OriginalUrl;
 
             // Assert
@@ -67,13 +67,13 @@ namespace URLShortener.Tests.Application
             // Arrange
             var urlRepository = SetupUrlRepository();
             var configuration = SetupConfiguration("https://localhost:1234");
-            var urlService = new UrlService(urlRepository.Object, configuration.Object);
+            var sut = new UrlService(urlRepository.Object, configuration.Object);
 
             urlRepository.Setup(repo => repo.GetByUrlAsync("https://localhost:1234/expired"))
                          .ReturnsAsync(new Url("https://example.com", "https://localhost:1234/expired", DateTime.UtcNow.AddDays(-1), "expired"));
 
             // Act & Assert
-            Func<Task> act = async () => await urlService.GetOriginalUrlAsync("expired");
+            Func<Task> act = async () => await sut.GetOriginalUrlAsync("expired");
             await act.Should().ThrowAsync<ExpiredUrlException>();
         }
 
@@ -83,12 +83,12 @@ namespace URLShortener.Tests.Application
             // Arrange
             var urlRepository = SetupUrlRepository();
             var configuration = SetupConfiguration("https://localhost:1234");
-            var urlService = new UrlService(urlRepository.Object, configuration.Object);
+            var sut = new UrlService(urlRepository.Object, configuration.Object);
             configuration.Setup(x => x.GetSection("AppSettings:MinMinutesToExpire").Value).Returns("20");
             configuration.Setup(x => x.GetSection("AppSettings:MaxMinutesToExpire").Value).Returns("500");
 
             // Act
-            var shortenedUrlObject = await urlService.ShortenUrlAsync("https://example.com");
+            var shortenedUrlObject = await sut.ShortenUrlAsync("https://example.com");
 
             // Assert
             shortenedUrlObject.ShortenedUrl.Should().NotBeNullOrEmpty();
@@ -102,10 +102,10 @@ namespace URLShortener.Tests.Application
             string EXPECTED_DOMAIN = "https://localhost:1234";
             var urlRepository = SetupUrlRepository();
             var configuration = SetupConfiguration(EXPECTED_DOMAIN);
-            var urlService = new UrlService(urlRepository.Object, configuration.Object);
+            var sut = new UrlService(urlRepository.Object, configuration.Object);
 
             // Act
-            var domain = urlService.GetShortenedUrlDomain();
+            var domain = sut.GetShortenedUrlDomain();
 
             // Assert
             domain.Should().Be(EXPECTED_DOMAIN);
@@ -120,14 +120,17 @@ namespace URLShortener.Tests.Application
 
             var urlRepository = SetupUrlRepository();
             var configuration = SetupConfiguration("https://localhost:1234");
+
             configuration.Setup(x => x.GetSection("AppSettings:MinMinutesToExpire").Value)
                          .Returns(MIN_MINUTES_TO_EXPIRE.ToString());
+
             configuration.Setup(x => x.GetSection("AppSettings:MaxMinutesToExpire").Value)
                          .Returns(MAX_MINUTES_TO_EXPIRE.ToString());
-            var urlService = new UrlService(urlRepository.Object, configuration.Object);
+
+            var sut = new UrlService(urlRepository.Object, configuration.Object);
 
             // Act
-            var result = urlService.GenerateRandomDuration();
+            var result = sut.GenerateRandomDuration();
 
             // Assert
             result.Should().BeAfter(DateTime.UtcNow);
@@ -142,14 +145,17 @@ namespace URLShortener.Tests.Application
 
             var urlRepository = SetupUrlRepository();
             var configuration = SetupConfiguration("https://localhost:1234");
+
             configuration.Setup(x => x.GetSection("AppSettings:MinMinutesToExpire").Value)
                          .Returns(UINT_MIN_MINUTES_TO_EXPIRE.ToString());
+
             configuration.Setup(x => x.GetSection("AppSettings:MaxMinutesToExpire").Value)
                          .Returns(UINT_MAX_MINUTES_TO_EXPIRE.ToString());
-            var urlService = new UrlService(urlRepository.Object, configuration.Object);
+
+            var sut = new UrlService(urlRepository.Object, configuration.Object);
 
             // Act & Assert
-            urlService.Invoking(service => service.GenerateRandomDuration())
+            sut.Invoking(service => service.GenerateRandomDuration())
                       .Should().NotThrow<FailedToParseMinutesToUintException>();
         }
 
@@ -159,10 +165,10 @@ namespace URLShortener.Tests.Application
             // Arrange
             var urlRepository = SetupUrlRepository();
             var configuration = SetupConfiguration("https://localhost:1234");
-            var urlService = new UrlService(urlRepository.Object, configuration.Object);
+            var sut = new UrlService(urlRepository.Object, configuration.Object);
 
             // Act
-            var result = await urlService.GenerateUniqueIdentifier();
+            var result = await sut.GenerateUniqueIdentifier();
 
             // Assert
             result.Should().NotBeNull().And.NotBeEmpty();
@@ -181,14 +187,17 @@ namespace URLShortener.Tests.Application
             // Arrange
             var urlRepository = SetupUrlRepository();
             var configuration = SetupConfiguration("https://localhost:1234");
+
             configuration.Setup(x => x.GetSection("AppSettings:MinMinutesToExpire").Value)
                          .Returns(minMinutes);
+
             configuration.Setup(x => x.GetSection("AppSettings:MaxMinutesToExpire").Value)
                          .Returns(maxMinutes);
-            var urlService = new UrlService(urlRepository.Object, configuration.Object);
+
+            var sut = new UrlService(urlRepository.Object, configuration.Object);
 
             // Act & Assert
-            urlService.Invoking(service => service.GenerateRandomDuration())
+            sut.Invoking(service => service.GenerateRandomDuration())
                       .Should().Throw<FailedToParseMinutesToUintException>();
         }
         #endregion
@@ -201,19 +210,19 @@ namespace URLShortener.Tests.Application
             // Arrange
             var urlRepository = SetupUrlRepository();
             var configuration = SetupConfiguration("https://localhost:1234");
-            var urlService = new UrlService(urlRepository.Object, configuration.Object);
+            var sut = new UrlService(urlRepository.Object, configuration.Object);
 
             var url = new Url(date);
 
             // Act & Assert
             if (expectException)
             {
-                urlService.Invoking(service => service.UrlIsExpired(url))
+                sut.Invoking(service => service.UrlIsExpired(url))
                          .Should().Throw<ExpiredUrlException>();
             }
             else
             {
-                urlService.Invoking(service => service.UrlIsExpired(url))
+                sut.Invoking(service => service.UrlIsExpired(url))
                          .Should().NotThrow<ExpiredUrlException>();
             }
         }
