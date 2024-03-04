@@ -1,8 +1,6 @@
-
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using System;
 using URLShortener.Application.Interfaces;
 using URLShortener.Domain;
 using URLShortener.Infra.Interfaces;
@@ -11,197 +9,222 @@ namespace URLShortener.Tests.Application
 {
     public class UrlServiceTest
     {
+        #region Setup Mocks
+        private Mock<IUrlRepository> SetupUrlRepository()
+        {
+            var urlRepository = new Mock<IUrlRepository>();
+            return urlRepository;
+        }
+
+        private Mock<IConfiguration> SetupConfiguration(string shortenedUrlDomain)
+        {
+            var configuration = new Mock<IConfiguration>();
+            configuration.Setup(x => x.GetSection("AppSettings:ShortenedUrlDomain").Value)
+                         .Returns(shortenedUrlDomain);
+            return configuration;
+        }
+        #endregion
+
+        #region Fact Tests
         [Fact]
-        public async Task GenerateShortenedUrl_ShouldReturnCorrectUrl()
+        public async Task GenerateShortenedUrl_ShouldReturnUrlWithCorrectFormat()
         {
             // Arrange
-            var urlRepository = new Mock<IUrlRepository>();
-            var configuration = new Mock<IConfiguration>();
-            configuration.Setup(x => x.GetSection("AppSettings:ShortenedUrlDomain").Value).Returns("https://localhost:1234");
-
+            var urlRepository = SetupUrlRepository();
+            var configuration = SetupConfiguration("https://localhost:1234");
             var urlService = new UrlService(urlRepository.Object, configuration.Object);
 
             // Act
             var shortenedUrl = await urlService.GenerateShortenedUrl();
 
             // Assert
-            Assert.NotNull(shortenedUrl);
-            Assert.StartsWith("https://localhost:1234/", shortenedUrl);
+            shortenedUrl.Should().NotBeNullOrEmpty();
+            shortenedUrl.Should().StartWith("https://localhost:1234/");
         }
 
         [Fact]
         public async Task GetOriginalUrlAsync_ShouldRetrieveOriginalUrl()
         {
             // Arrange
-            var urlRepository = new Mock<IUrlRepository>();
-            var configuration = new Mock<IConfiguration>();
-            configuration.Setup(x => x.GetSection("AppSettings:ShortenedUrlDomain").Value).Returns("https://localhost:1234");
-
+            var urlRepository = SetupUrlRepository();
+            var configuration = SetupConfiguration("https://localhost:1234");
             var urlService = new UrlService(urlRepository.Object, configuration.Object);
 
             urlRepository.Setup(repo => repo.GetByUrlAsync("https://localhost:1234/short"))
-                         .ReturnsAsync(new Url("https://example.com", "https://localhost:1234/short", DateTime.Now.AddDays(1), "short"));
+                         .ReturnsAsync(new Url("https://example.com", "https://localhost:1234/short", DateTime.UtcNow.AddDays(1), "short"));
 
             // Act
             var response = await urlService.GetOriginalUrlAsync("short");
             var originalUrl = response.OriginalUrl;
 
             // Assert
-            Assert.Equal("https://example.com", originalUrl);
+            originalUrl.Should().Be("https://example.com");
         }
 
         [Fact]
         public async Task GetOriginalUrlAsync_ShouldThrowExceptionWhenUrlIsExpired()
         {
             // Arrange
-            var urlRepository = new Mock<IUrlRepository>();
-            var configuration = new Mock<IConfiguration>();
-            configuration.Setup(x => x.GetSection("AppSettings:ShortenedUrlDomain").Value).Returns("https://localhost:1234");
-
+            var urlRepository = SetupUrlRepository();
+            var configuration = SetupConfiguration("https://localhost:1234");
             var urlService = new UrlService(urlRepository.Object, configuration.Object);
 
             urlRepository.Setup(repo => repo.GetByUrlAsync("https://localhost:1234/expired"))
-                         .ReturnsAsync(new Url("https://example.com", "https://localhost:1234/expired", DateTime.Now.AddDays(-1), "expired"));
+                         .ReturnsAsync(new Url("https://example.com", "https://localhost:1234/expired", DateTime.UtcNow.AddDays(-1), "expired"));
 
             // Act & Assert
-            await Assert.ThrowsAsync<ExpiredUrlException>(async () => await urlService.GetOriginalUrlAsync("expired"));
+            Func<Task> act = async () => await urlService.GetOriginalUrlAsync("expired");
+            await act.Should().ThrowAsync<ExpiredUrlException>();
         }
 
         [Fact]
         public async Task ShortenUrlAsync_ShouldCreateShortenedUrl()
         {
             // Arrange
-            var urlRepository = new Mock<IUrlRepository>();
-            var configuration = new Mock<IConfiguration>();
+            var urlRepository = SetupUrlRepository();
+            var configuration = SetupConfiguration("https://localhost:1234");
             var urlService = new UrlService(urlRepository.Object, configuration.Object);
-            configuration.Setup(x => x.GetSection("AppSettings:ShortenedUrlDomain").Value).Returns("https://localhost:1234");
             configuration.Setup(x => x.GetSection("AppSettings:MinMinutesToExpire").Value).Returns("20");
             configuration.Setup(x => x.GetSection("AppSettings:MaxMinutesToExpire").Value).Returns("500");
 
             // Act
             var shortenedUrlObject = await urlService.ShortenUrlAsync("https://example.com");
-            var shortenedUrlString = shortenedUrlObject.ShortenedUrl;
 
             // Assert
-            Assert.NotNull(shortenedUrlString);
+            shortenedUrlObject.ShortenedUrl.Should().NotBeNullOrEmpty();
+            shortenedUrlObject.Slug.Should().MatchRegex("^[^0-9]{6}$");
         }
 
         [Fact]
         public void GetShortenedUrlDomain_ShouldReturnConfiguredDomain()
         {
             // Arrange
-            var urlRepository = new Mock<IUrlRepository>();
-            var configuration = new Mock<IConfiguration>();
-            configuration.Setup(x => x.GetSection("AppSettings:ShortenedUrlDomain").Value).Returns("https://localhost:1234");
-
+            string EXPECTED_DOMAIN = "https://localhost:1234";
+            var urlRepository = SetupUrlRepository();
+            var configuration = SetupConfiguration(EXPECTED_DOMAIN);
             var urlService = new UrlService(urlRepository.Object, configuration.Object);
 
             // Act
             var domain = urlService.GetShortenedUrlDomain();
 
             // Assert
-            Assert.Equal("https://localhost:1234", domain);
+            domain.Should().Be(EXPECTED_DOMAIN);
         }
 
         [Fact]
         public void GenerateRandomDuration_ShouldReturnFutureDateTime()
         {
             // Arrange
-            var urlRepository = new Mock<IUrlRepository>();
-            var configuration = new Mock<IConfiguration>();
-            configuration.Setup(x => x.GetSection("AppSettings:MinMinutesToExpire").Value).Returns("20");
-            configuration.Setup(x => x.GetSection("AppSettings:MaxMinutesToExpire").Value).Returns("500");
+            int MIN_MINUTES_TO_EXPIRE = 20;
+            int MAX_MINUTES_TO_EXPIRE = 500;
+
+            var urlRepository = SetupUrlRepository();
+            var configuration = SetupConfiguration("https://localhost:1234");
+            configuration.Setup(x => x.GetSection("AppSettings:MinMinutesToExpire").Value)
+                         .Returns(MIN_MINUTES_TO_EXPIRE.ToString());
+            configuration.Setup(x => x.GetSection("AppSettings:MaxMinutesToExpire").Value)
+                         .Returns(MAX_MINUTES_TO_EXPIRE.ToString());
             var urlService = new UrlService(urlRepository.Object, configuration.Object);
 
             // Act
             var result = urlService.GenerateRandomDuration();
 
             // Assert
-            Assert.True(result > DateTime.Now);
-        }
-
-        [Fact]
-        public void GenerateRandomDuration_ShouldThrowExceptionWhenInvalidConfiguration()
-        {
-            // Arrange
-            var urlRepository = new Mock<IUrlRepository>();
-            var configuration = new Mock<IConfiguration>();
-            configuration.Setup(x => x.GetSection("AppSettings:MinMinutesToExpire").Value).Returns("teste");
-            configuration.Setup(x => x.GetSection("AppSettings:MaxMinutesToExpire").Value).Returns("teste");
-            var urlService = new UrlService(urlRepository.Object, configuration.Object);
-
-            // Act & Assert
-
-            urlService.Invoking(service => service.GenerateRandomDuration())
-                 .Should()
-                 .Throw<FailedToParseMinutesToUintException>();
+            result.Should().BeAfter(DateTime.UtcNow);
         }
 
         [Fact]
         public void GenerateRandomDuration_ShouldNotThrowExceptionWhenValidConfiguration()
         {
             // Arrange
-            var urlRepository = new Mock<IUrlRepository>();
-            var configuration = new Mock<IConfiguration>();
-            configuration.Setup(x => x.GetSection("AppSettings:MinMinutesToExpire").Value).Returns("20");
-            configuration.Setup(x => x.GetSection("AppSettings:MaxMinutesToExpire").Value).Returns("500");
+            uint UINT_MIN_MINUTES_TO_EXPIRE = 20;
+            uint UINT_MAX_MINUTES_TO_EXPIRE = 30;
+
+            var urlRepository = SetupUrlRepository();
+            var configuration = SetupConfiguration("https://localhost:1234");
+            configuration.Setup(x => x.GetSection("AppSettings:MinMinutesToExpire").Value)
+                         .Returns(UINT_MIN_MINUTES_TO_EXPIRE.ToString());
+            configuration.Setup(x => x.GetSection("AppSettings:MaxMinutesToExpire").Value)
+                         .Returns(UINT_MAX_MINUTES_TO_EXPIRE.ToString());
             var urlService = new UrlService(urlRepository.Object, configuration.Object);
 
             // Act & Assert
-
             urlService.Invoking(service => service.GenerateRandomDuration())
-                 .Should()
-                 .NotThrow<Exception>();
+                      .Should().NotThrow<FailedToParseMinutesToUintException>();
         }
 
         [Fact]
         public async Task GenerateUniqueIdentifier_ShouldReturnBase64EncodedId()
         {
             // Arrange
-            var urlRepository = new Mock<IUrlRepository>();
-            var configuration = new Mock<IConfiguration>();
+            var urlRepository = SetupUrlRepository();
+            var configuration = SetupConfiguration("https://localhost:1234");
             var urlService = new UrlService(urlRepository.Object, configuration.Object);
 
             // Act
             var result = await urlService.GenerateUniqueIdentifier();
 
             // Assert
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
+            result.Should().NotBeNull().And.NotBeEmpty();
+            result.Should().MatchRegex("^[^0-9]{6}$");
         }
 
-        [Fact]
-        public void UrlIsExpired_ShouldNotThrowExceptionForFutureDate()
+        #endregion
+
+        #region Theory With InlineData Tests
+        [Theory]
+        [InlineData("2", "4.58")]
+        [InlineData("DOIS", "6")]
+        [InlineData("-1", "30")]
+        public void GenerateRandomDuration_ShouldThrowExceptionWhenInvalidConfiguration(string minMinutes, string maxMinutes)
         {
             // Arrange
-            var urlRepository = new Mock<IUrlRepository>();
-            var configuration = new Mock<IConfiguration>();
+            var urlRepository = SetupUrlRepository();
+            var configuration = SetupConfiguration("https://localhost:1234");
+            configuration.Setup(x => x.GetSection("AppSettings:MinMinutesToExpire").Value)
+                         .Returns(minMinutes);
+            configuration.Setup(x => x.GetSection("AppSettings:MaxMinutesToExpire").Value)
+                         .Returns(maxMinutes);
             var urlService = new UrlService(urlRepository.Object, configuration.Object);
 
-            var futureDate = DateTime.Now.AddDays(1);
-            var url = new Url(futureDate);
-
             // Act & Assert
-            urlService.Invoking(service => service.UrlIsExpired(url))
-                .Should()
-                .NotThrow<Exception>();
+            urlService.Invoking(service => service.GenerateRandomDuration())
+                      .Should().Throw<FailedToParseMinutesToUintException>();
         }
+        #endregion
 
-        [Fact]
-        public void UrlIsExpired_ShouldThrowExceptionForExpiredDate()
+        #region Theory With MemberData Tests
+        [Theory]
+        [MemberData(nameof(UrlExpiryTestData))]
+        public void UrlIsExpired_ShouldThrowExceptionForExpiredDate(DateTime date, bool expectException)
         {
             // Arrange
-            var urlRepository = new Mock<IUrlRepository>();
-            var configuration = new Mock<IConfiguration>();
+            var urlRepository = SetupUrlRepository();
+            var configuration = SetupConfiguration("https://localhost:1234");
             var urlService = new UrlService(urlRepository.Object, configuration.Object);
 
-            var pastDate = DateTime.Now.AddDays(-1);
-            var url = new Url(pastDate);
+            var url = new Url(date);
 
             // Act & Assert
-            urlService.Invoking(service => service.UrlIsExpired(url))
-                .Should()
-                .Throw<ExpiredUrlException>();
+            if (expectException)
+            {
+                urlService.Invoking(service => service.UrlIsExpired(url))
+                         .Should().Throw<ExpiredUrlException>();
+            }
+            else
+            {
+                urlService.Invoking(service => service.UrlIsExpired(url))
+                         .Should().NotThrow<ExpiredUrlException>();
+            }
         }
+        #endregion
+
+        #region Test Data
+        public static IEnumerable<object[]> UrlExpiryTestData()
+        {
+            yield return new object[] { DateTime.Now.AddDays(1), false };
+            yield return new object[] { DateTime.Now.AddDays(-1), true };
+        }
+        #endregion
     }
 }
