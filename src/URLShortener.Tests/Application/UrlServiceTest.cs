@@ -96,22 +96,6 @@ namespace URLShortener.Tests.Application
         }
 
         [Fact]
-        public void GetShortenedUrlDomain_ShouldReturnConfiguredDomain()
-        {
-            // Arrange
-            string EXPECTED_DOMAIN = "https://localhost:1234";
-            var urlRepository = SetupUrlRepository();
-            var configuration = SetupConfiguration(EXPECTED_DOMAIN);
-            var sut = new UrlService(urlRepository.Object, configuration.Object);
-
-            // Act
-            var domain = sut.GetShortenedUrlDomain();
-
-            // Assert
-            domain.Should().Be(EXPECTED_DOMAIN);
-        }
-
-        [Fact]
         public void GenerateRandomDuration_ShouldReturnFutureDateTime()
         {
             // Arrange

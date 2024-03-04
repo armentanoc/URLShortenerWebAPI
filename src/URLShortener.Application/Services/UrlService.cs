@@ -10,15 +10,16 @@ namespace URLShortener.Application.Interfaces
     {
         private readonly IUrlRepository _repository;
         private readonly IConfiguration _configuration;
-
+        private readonly string _domain;
         public UrlService(IUrlRepository repository, IConfiguration configuration)
         {
             _repository = repository;
             _configuration = configuration;
+            _domain =  _configuration.GetSection("AppSettings:ShortenedUrlDomain").Value ?? throw new Exception("Host not configured.");
         }
         public async Task<Url> GetOriginalUrlAsync(string slug)
         {
-            string shortenedUrl = $"{GetShortenedUrlDomain()}/{slug}";
+            string shortenedUrl = $"{_domain}/{slug}";
             string decodedUrl = System.Net.WebUtility.UrlDecode(shortenedUrl);
             Url retrievedUrl = await _repository.GetByUrlAsync(decodedUrl);
 
@@ -39,12 +40,7 @@ namespace URLShortener.Application.Interfaces
         public async Task<string> GenerateShortenedUrl()
         {
             string uniqueIdentifier = await GenerateUniqueIdentifier();
-            string localhostAddress = GetShortenedUrlDomain();
-            return $"{localhostAddress}/{uniqueIdentifier}";
-        }
-        public string GetShortenedUrlDomain()
-        {
-            return _configuration.GetSection("AppSettings:ShortenedUrlDomain").Value ?? throw new Exception("Host not configured.");
+            return $"{_domain}/{uniqueIdentifier}";
         }
         public DateTime GenerateRandomDuration()
         {
@@ -65,11 +61,7 @@ namespace URLShortener.Application.Interfaces
             var urlRegisters = await _repository.GetAllAsync();
             Url? lastUrl = urlRegisters.LastOrDefault();
             uint id = lastUrl?.Id ?? 0;
-            return GenerateSlug(id);
-        }
-        public string GenerateSlug(uint id)
-        {
-            return WebEncoders.Base64UrlEncode(BitConverter.GetBytes(id)); 
+            return WebEncoders.Base64UrlEncode(BitConverter.GetBytes(id));
         }
         public bool UrlIsExpired(Url retrievedUrl)
         {
