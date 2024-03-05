@@ -61,7 +61,13 @@ Projeto que contém as exceções customizadas lançadas pela aplicação.
 
 ### 🧪 `URLShortener.Tests` 
 Projeto que contém os testes unitários em xUnity da lógica de negócio da aplicação.
+```
+dotnet test --collect:"XPlat Code Coverage"
 
+dotnet tool install -g dotnet-reportgenerator-globaltool
+
+reportgenerator "-reports:.\**\coverage.cobertura.xml" -reporttypes:Html -targetdir:output
+```
 ## Configurações da Aplicação Personalizadas 📁
 
 O domínio da url curta gerada, o mínimo e máximo de minutos para expirar são parâmetros customizáveis no `appsettings.json`:
