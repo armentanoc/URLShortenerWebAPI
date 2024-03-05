@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Diagnostics.CodeAnalysis;
 using URLShortener.Application.Interfaces;
 using URLShortener.Infra.Context;
 using URLShortener.Infra.Interfaces;
@@ -8,6 +9,7 @@ using URLShortener.WebAPI.Controllers;
 using URLShortener.WebAPI.Middlewares;
 namespace URLShortener.WebAPI
 {
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         public static void Main(string[] args)

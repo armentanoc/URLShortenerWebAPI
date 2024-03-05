@@ -1,8 +1,10 @@
 ﻿
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace URLShortener.WebAPI.Middlewares
 {
+    [ExcludeFromCodeCoverage]
     public class LoggingMiddleware 
     {
         private readonly RequestDelegate _next;

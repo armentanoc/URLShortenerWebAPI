@@ -61,12 +61,15 @@ Projeto que contém as exceções customizadas lançadas pela aplicação.
 
 ### 🧪 `URLShortener.Tests` 
 Projeto que contém os testes unitários em xUnity da lógica de negócio da aplicação.
+
+<!--dotnet tool install -g dotnet-reportgenerator-globaltool
+dotnet tool install dotnet-stryker-->
 ```
 dotnet test --collect:"XPlat Code Coverage"
 
-dotnet tool install -g dotnet-reportgenerator-globaltool
-
 reportgenerator "-reports:.\**\coverage.cobertura.xml" -reporttypes:Html -targetdir:output
+
+dotnet-stryker
 ```
 ## Configurações da Aplicação Personalizadas 📁
 

@@ -35,4 +35,8 @@
     <ProjectReference Include="..\URLShortener.WebAPI\URLShortener.WebAPI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestResults\" />
+  </ItemGroup>
+
 </Project>

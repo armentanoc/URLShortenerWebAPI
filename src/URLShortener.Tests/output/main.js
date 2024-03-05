@@ -226,40 +226,22 @@ var assemblies = [
   {
     "name": "URLShortener.CustomExceptions",
     "classes": [
-      { "name": "URLShortener.Application.Interfaces.ExpiredUrlException", "rp": "URLShortener.CustomExceptions_ExpiredUrlException.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 12, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "URLShortener.Application.Interfaces.FailedToParseMinutesToUintException", "rp": "URLShortener.CustomExceptions_FailedToParseMinutesToUintException.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "URLShortener.Application.Interfaces.MinMinutesIsGreaterOrEqualThanMaxMinutesException", "rp": "URLShortener.CustomExceptions_MinMinutesIsGreaterOrEqualThanMaxMinutesException.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "URLShortener.Infra.Repositories.EntityAlreadyExistsException", "rp": "URLShortener.CustomExceptions_EntityAlreadyExistsException.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 15, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "URLShortener.Infra.Repositories.EntityNotFoundException", "rp": "URLShortener.CustomExceptions_EntityNotFoundException.html", "cl": 0, "ucl": 11, "cal": 11, "tl": 24, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "URLShortener.Domain",
     "classes": [
-      { "name": "URLShortener.Domain.BaseEntity", "rp": "URLShortener.Domain_BaseEntity.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 13, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "URLShortener.Domain.Url", "rp": "URLShortener.Domain_Url.html", "cl": 15, "ucl": 6, "cal": 21, "tl": 35, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "URLShortener.Infra",
     "classes": [
-      { "name": "URLShortener.Infra.Context.AppDbContext", "rp": "URLShortener.Infra_AppDbContext.html", "cl": 0, "ucl": 9, "cal": 9, "tl": 22, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "URLShortener.Infra.Migrations.AppDbContextModelSnapshot", "rp": "URLShortener.Infra_AppDbContextModelSnapshot.html", "cl": 0, "ucl": 28, "cal": 28, "tl": 48, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "URLShortener.Infra.Migrations.CreateDatabaseInitial", "rp": "URLShortener.Infra_CreateDatabaseInitial.html", "cl": 0, "ucl": 49, "cal": 49, "tl": 89, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "URLShortener.Infra.Repositories.Repository<T>", "rp": "URLShortener.Infra_Repository_1.html", "cl": 0, "ucl": 45, "cal": 45, "tl": 78, "cb": 0, "tb": 4, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "URLShortener.Infra.Repositories.UrlRepository", "rp": "URLShortener.Infra_UrlRepository.html", "cl": 0, "ucl": 17, "cal": 17, "tl": 36, "cb": 0, "tb": 6, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "URLShortener.ViewModels",
     "classes": [
-      { "name": "URLShortener.ViewModels.UrlDTO", "rp": "URLShortener.ViewModels_UrlDTO.html", "cl": 0, "ucl": 9, "cal": 9, "tl": 17, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "URLShortener.ViewModels.UrlRequest", "rp": "URLShortener.ViewModels_UrlRequest.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 16, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "URLShortener.WebAPI",
     "classes": [
-      { "name": "ExceptionFilter", "rp": "URLShortener.WebAPI_ExceptionFilter.html", "cl": 0, "ucl": 35, "cal": 35, "tl": 68, "cb": 0, "tb": 12, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "URLShortener.WebAPI.Controllers.UrlController", "rp": "URLShortener.WebAPI_UrlController.html", "cl": 0, "ucl": 28, "cal": 28, "tl": 69, "cb": 0, "tb": 12, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "URLShortener.WebAPI.Middlewares.LoggingMiddleware", "rp": "URLShortener.WebAPI_LoggingMiddleware.html", "cl": 0, "ucl": 13, "cal": 13, "tl": 29, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "URLShortener.WebAPI.Program", "rp": "URLShortener.WebAPI_Program.html", "cl": 0, "ucl": 44, "cal": 44, "tl": 82, "cb": 0, "tb": 2, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
     ]},
 ];
 
@@ -268,41 +250,9 @@ var metrics = [{ "name": "Crap Score", "abbreviation": "crp", "explanationUrl": 
 var historicCoverageExecutionTimes = [];
 
 var riskHotspotMetrics = [
-      { "name": "Crap Score", "explanationUrl": "https://googletesting.blogspot.de/2011/02/this-code-is-crap.html" },
-      { "name": "Cyclomatic complexity", "explanationUrl": "https://en.wikipedia.org/wiki/Cyclomatic_complexity" },
 ];
 
 var riskHotspots = [
-  {
-    "assembly": "URLShortener.WebAPI", "class": "ExceptionFilter", "reportPath": "URLShortener.WebAPI_ExceptionFilter.html", "methodName": "OnExceptionAsync()", "methodShortName": "OnExceptionAsync()", "fileIndex": 0, "line": 17,
-    "metrics": [
-      { "value": 156, "exceeded": true },
-      { "value": 12, "exceeded": false },
-    ]},
-  {
-    "assembly": "URLShortener.WebAPI", "class": "URLShortener.WebAPI.Controllers.UrlController", "reportPath": "URLShortener.WebAPI_UrlController.html", "methodName": "Add()", "methodShortName": "Add()", "fileIndex": 0, "line": 57,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
-    ]},
-  {
-    "assembly": "URLShortener.Infra", "class": "URLShortener.Infra.Repositories.Repository<T>", "reportPath": "URLShortener.Infra_Repository_1.html", "methodName": "UpdateAsync()", "methodShortName": "UpdateAsync()", "fileIndex": 0, "line": 59,
-    "metrics": [
-      { "value": 20, "exceeded": true },
-      { "value": 4, "exceeded": false },
-    ]},
-  {
-    "assembly": "URLShortener.Infra", "class": "URLShortener.Infra.Repositories.UrlRepository", "reportPath": "URLShortener.Infra_UrlRepository.html", "methodName": "GetByUrlAsync()", "methodShortName": "GetByUrlAsync()", "fileIndex": 0, "line": 27,
-    "metrics": [
-      { "value": 20, "exceeded": true },
-      { "value": 4, "exceeded": false },
-    ]},
-  {
-    "assembly": "URLShortener.WebAPI", "class": "URLShortener.WebAPI.Controllers.UrlController", "reportPath": "URLShortener.WebAPI_UrlController.html", "methodName": "GetAll()", "methodShortName": "GetAll()", "fileIndex": 0, "line": 28,
-    "metrics": [
-      { "value": 20, "exceeded": true },
-      { "value": 4, "exceeded": false },
-    ]},
 ];
 
 var branchCoverageAvailable = true;

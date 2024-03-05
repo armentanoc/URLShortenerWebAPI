@@ -1,9 +1,11 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Diagnostics.CodeAnalysis;
 using URLShortener.Application.Interfaces;
 using URLShortener.Infra.Repositories;
 
+[ExcludeFromCodeCoverage]
 public class ExceptionFilter : IAsyncExceptionFilter
 {
     private readonly ILogger<ExceptionFilter> _logger;

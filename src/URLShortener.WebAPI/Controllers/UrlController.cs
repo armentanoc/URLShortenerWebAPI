@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Diagnostics.CodeAnalysis;
 using URLShortener.Application.Interfaces;
 using URLShortener.Domain;
 using URLShortener.ViewModels;
 
 namespace URLShortener.WebAPI.Controllers
 {
+    [ExcludeFromCodeCoverage]
     [ApiController]
     [Route("")]
     public class UrlController : ControllerBase

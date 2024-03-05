@@ -1,6 +1,9 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
+
 namespace URLShortener.ViewModels
 {
+    [ExcludeFromCodeCoverage]
     public class UrlDTO
     {
         public string ShortenedUrl { get; set; }

@@ -1,8 +1,10 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace URLShortener.Infra.Repositories
 {
+    [ExcludeFromCodeCoverage]
     [Serializable]
     public class EntityNotFoundException : Exception
     {

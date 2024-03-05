@@ -1,6 +1,9 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
+
 namespace URLShortener.Domain
 {
+    [ExcludeFromCodeCoverage]
     public class Url : BaseEntity
     {
         public string OriginalUrl { get; private set; }

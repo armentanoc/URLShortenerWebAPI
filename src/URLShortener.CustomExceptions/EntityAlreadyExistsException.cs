@@ -1,6 +1,9 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
+
 namespace URLShortener.Infra.Repositories
 {
+    [ExcludeFromCodeCoverage]
     [Serializable]
     public class EntityAlreadyExistsException : Exception
     {

@@ -1,8 +1,10 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace URLShortener.ViewModels
 {
+    [ExcludeFromCodeCoverage]
     public class UrlRequest
     {
         [Required(ErrorMessage = "Original url is required.")]

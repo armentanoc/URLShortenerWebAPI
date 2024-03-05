@@ -1,11 +1,13 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 using URLShortener.Domain;
 using URLShortener.Infra.Context;
 using URLShortener.Infra.Interfaces;
 
 namespace URLShortener.Infra.Repositories
 {
+    [ExcludeFromCodeCoverage]
     public class UrlRepository : Repository<Url>, IUrlRepository
     {
         public UrlRepository(AppDbContext context) : base(context)
