@@ -106,6 +106,7 @@ Por exemplo, no Live Server, os settings.json podem ignorar totalmente a pasta d
     ]
 }
 ```
+
 ## Middleware Customizado de Logging 🗞️ e Filtro Customizado de Exceção 🐛
 
 Através do `Middlewares/LoggingMiddleware` é realizado o logging sempre no começo e no final de uma requisição, com detalhes sobre o status e eventuais erros de forma personalizada, que são capturados no Filtro Customizado de Exceção Global (`Filters/ExceptionFilter.cs`).
