@@ -31,7 +31,7 @@ namespace URLShortener.Application.Interfaces
         public async Task<Url> ShortenUrlAsync(string originalUrl)
         {
             string shortenedUrl = await GenerateShortenedUrl();
-            string slug = shortenedUrl.Split("/").Last();
+            string slug = shortenedUrl.Split('/').Last();
             DateTime expirationDate = GenerateRandomDuration();
             Url newUrl = new Url(originalUrl, shortenedUrl, expirationDate, slug);
             await _repository.AddAsync(newUrl);
